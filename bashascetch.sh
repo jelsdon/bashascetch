@@ -126,6 +126,20 @@ function draw() {
       fi
     fi
 
+    # Move down
+    if [ $direction == '9' ]
+    then
+      if [ $pos_y -lt $((WINDOW_HEIGHT-2)) ]
+      then
+        let pos_y=pos_y+1
+        tput cup ${pos_y} ${pos_x}
+        echo -n X
+        # Put cursor in new pos -- check if there's a 
+        # replace mode for this
+        tput cup ${pos_y} ${pos_x}
+      fi
+    fi
+
   done
 }
 
