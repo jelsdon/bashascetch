@@ -8,4 +8,9 @@ function setWindowSize() {
   printf "\033[8;${y};${x}t"
 }
 
+function clearWindow() {
+  printf "\033c"
+}
+
 setWindowSize 80 24
+clearWindow
