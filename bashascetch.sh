@@ -112,6 +112,12 @@ function draw() {
   done
 }
 
+function cleanup() {
+  clearWindow
+  tput reset
+}
+
+trap cleanup EXIT
 setWindowSize $WIDTH $HEIGHT
 clearWindow
 getWindowSize
