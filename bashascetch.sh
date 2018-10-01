@@ -96,12 +96,28 @@ function draw() {
   do
     read -s -n 1 direction
 
+   # ...There's a case for the below to be a case
+
     # Move left
     if [ $direction == '1' ]
     then
       if [ $pos_x -gt 1 ]
       then
         let pos_x=pos_x-1
+        tput cup ${pos_y} ${pos_x}
+        echo -n X
+        # Put cursor in new pos -- check if there's a 
+        # replace mode for this
+        tput cup ${pos_y} ${pos_x}
+      fi
+    fi
+
+    # Move right
+    if [ $direction == '2' ]
+    then
+      if [ $pos_x -lt $((WINDOW_WIDTH-2)) ]
+      then
+        let pos_x=pos_x+1
         tput cup ${pos_y} ${pos_x}
         echo -n X
         # Put cursor in new pos -- check if there's a 
