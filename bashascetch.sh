@@ -99,7 +99,7 @@ function draw() {
    # ...There's a case for the below to be a case
 
     # Move left
-    if [ $direction == '1' ]
+    if [ "${direction}" == '1' ]
     then
       if [ $pos_x -gt 1 ]
       then
@@ -113,7 +113,7 @@ function draw() {
     fi
 
     # Move right
-    if [ $direction == '2' ]
+    if [ "${direction}" == '2' ]
     then
       if [ $pos_x -lt $((WINDOW_WIDTH-2)) ]
       then
@@ -127,7 +127,7 @@ function draw() {
     fi
 
     # Move down
-    if [ $direction == '9' ]
+    if [ "${direction}" == '9' ]
     then
       if [ $pos_y -lt $((WINDOW_HEIGHT-2)) ]
       then
@@ -141,7 +141,7 @@ function draw() {
     fi
 
     # Move up
-    if [ $direction == '0' ]
+    if [ "${direction}" == '0' ]
     then
       if [ $pos_y -gt 1 ]
       then
@@ -152,6 +152,13 @@ function draw() {
         # replace mode for this
         tput cup ${pos_y} ${pos_x}
       fi
+    fi
+
+    # Shake up
+    if [ "${direction}" == "" ]
+    then
+      clearWindow
+      drawBorder
     fi
 
   done
