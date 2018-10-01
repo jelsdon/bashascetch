@@ -1,5 +1,7 @@
 #!/bin/bash
 
+WIDTH=80
+HEIGHT=24
 
 function setWindowSize() {
   local x=$1; shift
@@ -12,5 +14,5 @@ function clearWindow() {
   printf "\033c"
 }
 
-setWindowSize 80 24
+setWindowSize $WIDTH $HEIGHT
 clearWindow
