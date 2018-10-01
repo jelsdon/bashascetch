@@ -90,6 +90,8 @@ function draw() {
   local pos_x=$((WINDOW_WIDTH/2))
   local pos_y=$((WINDOW_HEIGHT/2))
 
+  # Hide cursor
+  tput civis
   # Place cursor in middle of board
   tput cup ${pos_y} ${pos_x}
   echo -n ${MARK}
@@ -161,6 +163,9 @@ function draw() {
     then
       clearWindow
       drawBorder
+
+      # Hide cursor
+      tput civis
     fi
 
   done
