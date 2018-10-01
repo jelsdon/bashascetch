@@ -1,7 +1,8 @@
 #!/bin/bash
 
 
-shopt -s checkwinsize
+shopt -s checkwinsize     # Gather window size
+tput cnorm                # Hide cursor
 WIDTH=80
 HEIGHT=24
 WINDOW_HEIGHT=""
@@ -81,11 +82,38 @@ function drawBorder() {
   drawBoxBar
   drawBoxSides
   drawBoxBar
+}
 
+function draw() {
+  local pos_x=$((WINDOW_WIDTH/2))
+  local pos_y=$((WINDOW_HEIGHT/2))
+
+  # Place cursor in middle of board
+  tput cup ${pos_y} ${pos_x}
+  echo -n X
+  while true
+  do
+    read -s -n 1 direction
+
+    # Move left
+    if [ $direction == '1' ]
+    then
+      if [ $pos_x -gt 1 ]
+      then
+        let pos_x=pos_x-1
+        tput cup ${pos_y} ${pos_x}
+        echo -n X
+        # Put cursor in new pos -- check if there's a 
+        # replace mode for this
+        tput cup ${pos_y} ${pos_x}
+      fi
+    fi
+
+  done
 }
 
 setWindowSize $WIDTH $HEIGHT
 clearWindow
 getWindowSize
 drawBorder
-sleep 10
+draw
