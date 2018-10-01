@@ -3,8 +3,10 @@
 
 shopt -s checkwinsize     # Gather window size
 tput cnorm                # Hide cursor
+
 WIDTH=80
 HEIGHT=24
+MARK='X'
 WINDOW_HEIGHT=""
 WINDOW_WIDTH=""
 
@@ -90,7 +92,7 @@ function draw() {
 
   # Place cursor in middle of board
   tput cup ${pos_y} ${pos_x}
-  echo -n X
+  echo -n ${MARK}
   tput cup ${pos_y} ${pos_x}
   while true
   do
@@ -105,7 +107,7 @@ function draw() {
       then
         let pos_x=pos_x-1
         tput cup ${pos_y} ${pos_x}
-        echo -n X
+        echo -n ${MARK}
         # Put cursor in new pos -- check if there's a 
         # replace mode for this
         tput cup ${pos_y} ${pos_x}
@@ -119,7 +121,7 @@ function draw() {
       then
         let pos_x=pos_x+1
         tput cup ${pos_y} ${pos_x}
-        echo -n X
+        echo -n ${MARK}
         # Put cursor in new pos -- check if there's a 
         # replace mode for this
         tput cup ${pos_y} ${pos_x}
@@ -133,7 +135,7 @@ function draw() {
       then
         let pos_y=pos_y+1
         tput cup ${pos_y} ${pos_x}
-        echo -n X
+        echo -n ${MARK}
         # Put cursor in new pos -- check if there's a 
         # replace mode for this
         tput cup ${pos_y} ${pos_x}
@@ -147,7 +149,7 @@ function draw() {
       then
         let pos_y=pos_y-1
         tput cup ${pos_y} ${pos_x}
-        echo -n X
+        echo -n ${MARK}
         # Put cursor in new pos -- check if there's a 
         # replace mode for this
         tput cup ${pos_y} ${pos_x}
