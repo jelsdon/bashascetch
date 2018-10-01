@@ -91,6 +91,7 @@ function draw() {
   # Place cursor in middle of board
   tput cup ${pos_y} ${pos_x}
   echo -n X
+  tput cup ${pos_y} ${pos_x}
   while true
   do
     read -s -n 1 direction
