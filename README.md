@@ -1,6 +1,6 @@
-# bashascetch
+# bashasketch
 
-bashascetch is a terminal based etch-a-scetch emulator powered by bash
+bashasketch is a terminal based etch-a-sketch emulator powered by bash
 
 # Controls
 
