@@ -4,8 +4,8 @@
 shopt -s checkwinsize     # Gather window size
 tput cnorm                # Hide cursor
 
-WIDTH=80
-HEIGHT=24
+WIDTH=160
+HEIGHT=48
 MARK='X'
 WINDOW_HEIGHT=""
 WINDOW_WIDTH=""
@@ -23,11 +23,11 @@ function clearWindow() {
 }
 
 function getWindowWidth() {
-  echo $COLUMNS
+  tput cols
 }
 
 function getWindowHeight() {
-  echo $LINES
+  tput lines
 }
 
 function getWindowSize() {
@@ -50,11 +50,9 @@ function drawBoxPipe() {
 
 function drawBoxBar() {
   local x_pos=0
-  local y_pos=0
-  local window_width=$WINDOW_WIDTH
+  getWindowSize
   drawBoxCorner
-  let window_width=window_width-2
-  while [ $x_pos -lt $window_width ]
+  while [ $x_pos -lt $((WINDOW_WIDTH-2)) ]
   do
     drawBoxDash
     let x_pos=x_pos+1
@@ -77,10 +75,8 @@ function drawBoxSides() {
 }
 
 function drawBorder() {
-  local x_pos=0
-  local y_pos=0
   # Draw the top line
-  tput cup ${y_pos} ${x_pos}
+  tput cup 0 0
   drawBoxBar
   drawBoxSides
   drawBoxBar
