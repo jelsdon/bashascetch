@@ -91,6 +91,8 @@ function draw() {
   tput civis
   # Place cursor in middle of board
   tput cup ${pos_y} ${pos_x}
+  tput setab 255
+  tput setaf 255
   echo -n ${MARK}
   tput cup ${pos_y} ${pos_x}
   while true
@@ -163,6 +165,8 @@ function draw() {
 
       # Hide cursor
       tput civis
+      tput setab 255
+      tput setaf 255
     fi
 
   done
