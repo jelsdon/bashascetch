@@ -3,6 +3,7 @@
 
 shopt -s checkwinsize     # Gather window size
 tput cnorm                # Hide cursor
+stty -echo                # Hide user input
 
 WIDTH=160
 HEIGHT=48
@@ -170,6 +171,7 @@ function draw() {
 function cleanup() {
   clearWindow
   tput reset
+  stty echo
 }
 
 trap cleanup EXIT
