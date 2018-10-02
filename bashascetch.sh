@@ -10,17 +10,12 @@ HEIGHT=48
 MARK='X'
 WINDOW_HEIGHT=""
 WINDOW_WIDTH=""
-
-
-function setWindowSize() {
-  local x=$1; shift
-  local y=$1; shift
-
-  printf "\033[8;${y};${x}t"
-}
+CURSOR_X=0
+CURSOR_Y=0
 
 function clearWindow() {
-  printf "\033c"
+  tput sgr0    # Reset 'pen'
+  tput clear
 }
 
 function getWindowWidth() {
@@ -31,8 +26,7 @@ function getWindowHeight() {
   tput lines
 }
 
-function getWindowSize() {
-  (:) # Subshell sets $LINES and $COLUMNS
+function setWindowSize() {
   WINDOW_WIDTH=$(getWindowWidth)
   WINDOW_HEIGHT=$(getWindowHeight)
 }
@@ -51,7 +45,6 @@ function drawBoxPipe() {
 
 function drawBoxBar() {
   local x_pos=0
-  getWindowSize
   drawBoxCorner
   while [ $x_pos -lt $((WINDOW_WIDTH-2)) ]
   do
@@ -63,7 +56,6 @@ function drawBoxBar() {
 
 function drawBoxSides() {
   local y_pos=1
-  getWindowSize
 
   while [ $y_pos -lt $((WINDOW_HEIGHT-1)) ]
   do
@@ -75,30 +67,38 @@ function drawBoxSides() {
   done
 }
 
-function drawBorder() {
-  # Draw the top line
+function drawGame() {
+  setWindowSize
+  # Determine game center
+  CURSOR_X=$((WINDOW_WIDTH/2))
+  CURSOR_Y=$((WINDOW_HEIGHT/2))
+  clearWindow
+
+  # Set border colour
   tput bold
   tput setaf 20
   tput setab 25
+
+  # Move cursor to top left
   tput cup 0 0
+
+  # Start drawing border
   drawBoxBar
   drawBoxSides
   drawBoxBar
-  tput sgr0
-}
 
-function draw() {
-  local pos_x=$((WINDOW_WIDTH/2))
-  local pos_y=$((WINDOW_HEIGHT/2))
+  tput sgr0    # Reset 'pen'
+  tput civis   # Hide cursor
 
-  # Hide cursor
-  tput civis
   # Place cursor in middle of board
-  tput cup ${pos_y} ${pos_x}
+  tput cup ${CURSOR_Y} ${CURSOR_X}
   tput setab 255
   tput setaf 255
   echo -n ${MARK}
-  tput cup ${pos_y} ${pos_x}
+  tput cup ${CURSOR_Y} ${CURSOR_X}
+}
+
+function draw() {
   while true
   do
     read -s -n 1 direction
@@ -108,69 +108,65 @@ function draw() {
     # Move left
     if [ "${direction}" == '1' ]
     then
-      if [ $pos_x -gt 1 ]
+      if [ $CURSOR_X -gt 1 ]
       then
-        let pos_x=pos_x-1
-        tput cup ${pos_y} ${pos_x}
+        let CURSOR_X=CURSOR_X-1
+        tput cup ${CURSOR_Y} ${CURSOR_X}
         echo -n ${MARK}
         # Put cursor in new pos -- check if there's a 
         # replace mode for this
-        tput cup ${pos_y} ${pos_x}
+        tput cup ${CURSOR_Y} ${CURSOR_X}
       fi
     fi
 
     # Move right
     if [ "${direction}" == '2' ]
     then
-      if [ $pos_x -lt $((WINDOW_WIDTH-2)) ]
+      if [ $CURSOR_X -lt $((WINDOW_WIDTH-2)) ]
       then
-        let pos_x=pos_x+1
-        tput cup ${pos_y} ${pos_x}
+        let CURSOR_X=CURSOR_X+1
+        tput cup ${CURSOR_Y} ${CURSOR_X}
         echo -n ${MARK}
         # Put cursor in new pos -- check if there's a 
         # replace mode for this
-        tput cup ${pos_y} ${pos_x}
+        tput cup ${CURSOR_Y} ${CURSOR_X}
       fi
     fi
 
     # Move down
     if [ "${direction}" == '9' ]
     then
-      if [ $pos_y -lt $((WINDOW_HEIGHT-2)) ]
+      if [ $CURSOR_Y -lt $((WINDOW_HEIGHT-2)) ]
       then
-        let pos_y=pos_y+1
-        tput cup ${pos_y} ${pos_x}
+        let CURSOR_Y=CURSOR_Y+1
+        tput cup ${CURSOR_Y} ${CURSOR_X}
         echo -n ${MARK}
         # Put cursor in new pos -- check if there's a 
         # replace mode for this
-        tput cup ${pos_y} ${pos_x}
+        tput cup ${CURSOR_Y} ${CURSOR_X}
       fi
     fi
 
     # Move up
     if [ "${direction}" == '0' ]
     then
-      if [ $pos_y -gt 1 ]
+      if [ $CURSOR_Y -gt 1 ]
       then
-        let pos_y=pos_y-1
-        tput cup ${pos_y} ${pos_x}
+        let CURSOR_Y=CURSOR_Y-1
+        tput cup ${CURSOR_Y} ${CURSOR_X}
         echo -n ${MARK}
         # Put cursor in new pos -- check if there's a 
         # replace mode for this
-        tput cup ${pos_y} ${pos_x}
+        tput cup ${CURSOR_Y} ${CURSOR_X}
       fi
     fi
 
     # Shake up
     if [ "${direction}" == "" ]
     then
+      tput sgr0    # Reset 'pen'
       clearWindow
-      drawBorder
-
-      # Hide cursor
-      tput civis
-      tput setab 255
-      tput setaf 255
+      drawGame
     fi
 
   done
@@ -183,8 +179,6 @@ function cleanup() {
 }
 
 trap cleanup EXIT
-setWindowSize $WIDTH $HEIGHT
-clearWindow
-getWindowSize
-drawBorder
+trap drawGame SIGWINCH
+drawGame
 draw
