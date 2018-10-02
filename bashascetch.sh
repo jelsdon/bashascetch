@@ -77,10 +77,14 @@ function drawBoxSides() {
 
 function drawBorder() {
   # Draw the top line
+  tput bold
+  tput setaf 20
+  tput setab 25
   tput cup 0 0
   drawBoxBar
   drawBoxSides
   drawBoxBar
+  tput sgr0
 }
 
 function draw() {
