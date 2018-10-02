@@ -8,7 +8,7 @@ bashasketch is a terminal based etch-a-sketch emulator powered by bash
   - 2 Move stylus right
   - 9 Move stylus down
   - 0 Move stylus up
-  - <space> | <enter> Shake clean / reset stylus
+  - space | enter Shake clean / reset stylus
 
 # Features
 
